@@ -1,0 +1,62 @@
+<mat-card class="user-card mat-elevation-z6">
+
+    <mat-card-header class="d-flex justify-content-between">
+
+        <div mat-card-avatar>
+            <img [src]="userObj.profileImage" class="avatar-img">
+        </div>
+        <mat-card-title>
+
+            {{ userObj.userName }}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+            {{ userObj.userRole }}
+        </mat-card-subtitle>
+
+        <ul class="list-group">
+            <li *ngFor="let ski of userObj.skills" class="list-group-item">
+                {{ski}}
+            </li>
+        </ul>
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <p class="description">
+            {{ userObj.profileDescription }}
+        </p>
+
+        <p>
+            <strong>Experience:</strong> {{ userObj.experienceYears }} Years
+        </p>
+
+        <h3 class="text-center">Address</h3>
+
+        <div class="address-grid">
+
+            <div class="address-box">
+                <h4>Current</h4>
+                <p>{{ userObj.address.current.country }}</p>
+                <p>{{ userObj.address.current.state }}</p>
+                <p>{{ userObj.address.current.city }}</p>
+                <p>{{ userObj.address.current.zipcode }}</p>
+            </div>
+
+            <div class="address-box">
+                <h4>Permanent</h4>
+                <p>{{ userObj.address.permanent.country }}</p>
+                <p>{{ userObj.address.permanent.state }}</p>
+                <p>{{ userObj.address.permanent.city }}</p>
+                <p>{{ userObj.address.permanent.zipcode }}</p>
+            </div>
+
+        </div>
+
+    </mat-card-content>
+    <div class="card-footer d-flex justify-content-end">
+        <button mat-raised-button color="primary" routerLink="edit" class="mr-4">Edit</button>
+        <button mat-raised-button color="warn" (click)="onRemove()">Delete</button>
+    </div>
+</mat-card>
+
