@@ -8,57 +8,50 @@ import { UsersService } from 'src/app/services/users.service';
 @Component({
   selector: 'app-users-form',
   templateUrl: './users-form.component.html',
-  styleUrls: ['./users-form.component.scss']
+  styleUrls: ['./users-form.component.scss'],
 })
 export class UsersFormComponent implements OnInit {
-
-  userId!: string
-  userObj!: IUser
+  userId!: string;
+  userObj!: IUser;
   userForm!: FormGroup;
-  isInEditMode: boolean = false
+  isInEditMode: boolean = false;
 
-  constructor(private _service: UsersService,
+  constructor(
+    private _service: UsersService,
     private _router: Router,
     private _routes: ActivatedRoute,
-    private _snackBar: SnackBarService
-  ) { }
+    private _snackBar: SnackBarService,
+  ) {}
 
   ngOnInit(): void {
-    this.createForm()
-    this.patchData()
+    this.createForm();
+    this.patchData();
   }
 
   createForm() {
-
     this.userForm = new FormGroup({
-
       userName: new FormControl(null, Validators.required),
       userRole: new FormControl(null, Validators.required),
       profileDescription: new FormControl(null, Validators.required),
       profileImage: new FormControl(null, Validators.required),
 
       address: new FormGroup({
-
         current: new FormGroup({
           country: new FormControl(null, Validators.required),
           state: new FormControl(null, Validators.required),
           city: new FormControl(null, Validators.required),
-          zipcode: new FormControl(null, Validators.required)
+          zipcode: new FormControl(null, Validators.required),
         }),
 
         permanent: new FormGroup({
           country: new FormControl(null, Validators.required),
           state: new FormControl(null, Validators.required),
           city: new FormControl(null, Validators.required),
-          zipcode: new FormControl(null, Validators.required)
-        })
-
+          zipcode: new FormControl(null, Validators.required),
+        }),
       }),
 
-      skills: new FormArray([
-        new FormControl(null, Validators.required)
-      ])
-
+      skills: new FormArray([new FormControl(null, Validators.required)]),
     });
   }
 
@@ -66,34 +59,27 @@ export class UsersFormComponent implements OnInit {
     return this.userForm.get('skills') as FormArray;
   }
 
-
   onSkillAdd() {
-    this.SkillArray.push(
-      new FormControl(null, Validators.required)
-    );
+    this.SkillArray.push(new FormControl(null, Validators.required));
   }
-
 
   onSkillRemove(i: number) {
     this.SkillArray.removeAt(i);
   }
 
-
   onAdd() {
-
     if (this.userForm.valid) {
       let createObj: IUser = {
         ...this.userForm.getRawValue(),
-        userId: Date.now().toString()
-      }
+        userId: Date.now().toString(),
+      };
       this._service.onAdd(createObj).subscribe({
-        next: data => {
-          this._router.navigate([''])
-          this._snackBar.snackBar(`Student Added With Name SuccessFully`)
-        }
-      })
+        next: (data) => {
+          this._router.navigate(['']);
+          this._snackBar.snackBar(`Student Added With Name SuccessFully`);
+        },
+      });
     }
-
   }
 
   patchData() {
@@ -102,9 +88,16 @@ export class UsersFormComponent implements OnInit {
       this._service.fetchById(this.userId).subscribe({
         next: (data: IUser) => {
           this.userForm.patchValue(data);
-          this.userForm.setControl('skills', new FormArray(data.skills.map(skill => new FormControl(skill, Validators.required))));
+          this.userForm.setControl(
+            'skills',
+            new FormArray(
+              data.skills.map(
+                (skill) => new FormControl(skill, Validators.required),
+              ),
+            ),
+          );
           this.isInEditMode = true;
-        }
+        },
       });
     }
   }
@@ -113,14 +106,14 @@ export class UsersFormComponent implements OnInit {
     if (this.userForm.valid) {
       let createObj: IUser = {
         ...this.userForm.getRawValue(),
-        userId: this.userId
-      }
+        userId: this.userId,
+      };
       this._service.onUpdate(createObj).subscribe({
-        next: data => {
-          this._router.navigate(['/'])
-          this._snackBar.snackBar(`Student Updated SuccessFully`)
-        }
-      })
+        next: (data) => {
+          this._router.navigate(['/']);
+          this._snackBar.snackBar(`Student Updated SuccessFully`);
+        },
+      });
     }
   }
 }
